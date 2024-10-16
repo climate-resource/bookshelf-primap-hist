@@ -1,6 +1,6 @@
 [project]
 name = "bookshelf-primap-hist"
-version = "1.0.0"
+version = "1.0.1a1"
 description = "PRIMAP-hist national historical emissions time series"
 readme = "README.md"
 requires-python = ">=3.11"
