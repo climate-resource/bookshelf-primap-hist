@@ -5,6 +5,7 @@ description = "PRIMAP-hist national historical emissions time series"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "bookshelf>=0.3.1b4",
     "bookshelf-producer>=0.3.1b4",
     "pycountry>=24.6.1",
     "scmdata>=0.16.1",

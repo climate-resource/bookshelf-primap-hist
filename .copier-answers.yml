@@ -1,0 +1,9 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v0.2.4
+_src_path: gh:climate-resource/copier-bookshelf-dataset
+author: Jared Lewis
+author_email: jared.lewis@climate-resource.com
+dataset_description: PRIMAP-hist national historical emissions time series
+dataset_name: primap-hist
+dataset_name_human: PRIMAP-hist
+project_url: https://github.com/climate-resource/bookshelf-primap-hist

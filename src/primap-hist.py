@@ -234,8 +234,4 @@ book.add_timeseries("by_region", data_regions, write_long=False)
 # %%
 book.metadata()
 
-# %% [markdown]
-# This notebook is not responsible for uploading the book to the `BookShelf`.
-# See docs for how to upload `Books` to the `BookShelf`
-
 # %%
