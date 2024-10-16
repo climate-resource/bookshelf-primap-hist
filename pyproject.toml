@@ -6,11 +6,13 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "bookshelf-producer>=0.3.1b4",
+    "pycountry>=24.6.1",
     "scmdata>=0.16.1",
 ]
 
 [tool.uv]
 dev-dependencies = [
     "mypy>=1.11.2",
+    "pandas-stubs>=2.2.3.241009",
     "toml>=0.10.2",
 ]

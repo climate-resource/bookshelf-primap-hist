@@ -12,7 +12,6 @@ select = [
     "I",
     "D",
     "PL",
-    "TRY",
     "NPY",
     "RUF",
     "UP",
