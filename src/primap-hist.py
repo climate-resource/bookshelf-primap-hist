@@ -190,6 +190,8 @@ def convert_units(run: scmdata.ScmRun) -> scmdata.ScmRun:
     Convert units to kt CO2e / yr
     """
     unit = run.get_unique_meta("unit", True)
+    if not isinstance(unit, str):
+        raise TypeError("Unit is not a string")
 
     # This assumes that the form of 'X * gigagram / a'
     # The unit conversion should fail if this assumption proves wrong
