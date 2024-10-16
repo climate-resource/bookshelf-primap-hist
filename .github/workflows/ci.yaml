@@ -16,6 +16,7 @@ jobs:
     env:
       MYPYPATH: stubs
       PRE_COMMIT_HOME: /tmp/.cache/pre-commit
+      UV_PRERELEASE: allow
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -41,6 +42,8 @@ jobs:
     defaults:
       run:
         shell: bash
+    env:
+      UV_PRERELEASE: allow
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
