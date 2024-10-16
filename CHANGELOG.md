@@ -20,3 +20,17 @@ from the examples given in that link.
 -->
 
 <!-- towncrier release notes start -->
+
+## PRIMAP-hist v1.0.0 (2024-10-16)
+
+### Features
+
+- Add v2.6 and v2.5.1 PRIMAP-hist datasets ([#1](https://github.com/climate-resource/bookshelf-primap-hist/pull/1))
+
+### Improvements
+
+- Add an integration test for the PRIMAP-hist units ([#2](https://github.com/climate-resource/bookshelf-primap-hist/pull/2))
+
+### Trivial/Internal Changes
+
+- [#2](https://github.com/climate-resource/bookshelf-primap-hist/pull/2)
