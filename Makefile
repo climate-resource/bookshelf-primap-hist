@@ -15,9 +15,6 @@ endef
 export PRINT_HELP_PYSCRIPT
 
 export BOOKSHELF_NOTEBOOK_DIRECTORY = src
-# TODO: Remove once a release of bookshelf is made
-export UV_PRERELEASE = allow
-
 
 .PHONY: help
 help:  ## print short description of each target
@@ -46,7 +43,7 @@ changelog-draft:  ## compile a draft of the next changelog
 
 .PHONY: virtual-environment
 virtual-environment:  ## update virtual environment, create a new one if it doesn't already exist
-	uv sync
+	uv sync --dev --all-extras
 	uvx pre-commit install
 
 run:  ## Generate the book

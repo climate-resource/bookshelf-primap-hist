@@ -11,8 +11,8 @@ dependencies = [
     "scmdata>=0.16.1",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "mypy>=1.11.2",
     "pandas-stubs>=2.2.3.241009",
     "pytest>=8.3.3",

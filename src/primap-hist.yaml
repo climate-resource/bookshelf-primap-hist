@@ -1,6 +1,6 @@
 name: primap-hist
 edition: 5
-license: CC-BY
+license: CC-BY-NC
 description: |
   Comprehensive set of historical greenhouse gas emissions for every country.
 
@@ -41,7 +41,7 @@ versions:
           hash: 07a3277732abe24fb693f519572b3dba92a308f2efece7ba44d18bc07e5a4c9d
       documentation: https://zenodo.org/record/5494497
       author: Gütschow, Johannes, Günther, Annika; Pflüger, Mika
-      time_domain: [ 1750, 2019 ]
+      time_domain: [1750, 2019]
   - version: v2.4
     dataset:
       url: https://doi.org/10.5281/zenodo.7179775
@@ -51,7 +51,7 @@ versions:
           hash: md5:3a40d9abb47fe688295af36301424679
       documentation: https://zenodo.org/record/5494497
       author: Gütschow, Johannes; Pflüger, Mika
-      time_domain: [ 1750, 2021 ]
+      time_domain: [1750, 2021]
   - version: v2.4.1
     dataset:
       url: https://doi.org/10.5281/zenodo.7585420
@@ -61,7 +61,7 @@ versions:
           hash: md5:c42d12533887c7b419608bce52f635f8
       documentation: https://zenodo.org/record/7585420
       author: Gütschow, Johannes; Pflüger, Mika
-      time_domain: [ 1750, 2021 ]
+      time_domain: [1750, 2021]
   - version: v2.4.2
     dataset:
       url: https://doi.org/10.5281/zenodo.7727475
@@ -70,7 +70,7 @@ versions:
         - url: doi:10.5281/zenodo.7727475/Guetschow-et-al-2023a-PRIMAP-hist_v2.4.2_final_no_rounding_09-Mar-2023.csv
           hash: md5:5d1fe818e7d373920cfca899fe48f7e5
       author: Gütschow, Johannes; Pflüger, Mika
-      time_domain: [ 1750, 2021 ]
+      time_domain: [1750, 2021]
   - version: v2.5
     private: false
     dataset:
@@ -78,7 +78,7 @@ versions:
         - url: doi:10.5281/zenodo.10006301/Guetschow_et_al_2023b-PRIMAP-hist_v2.5_final_no_rounding_15-Oct-2023.csv
           hash: md5:e4ddeeb06d9cff9c7e16fc320797d2f1
       author: Gütschow, Johannes; Pflüger, Mika
-      time_domain: [ 1750, 2022 ]
+      time_domain: [1750, 2022]
   - version: v2.5.1
     private: false
     dataset:
@@ -86,7 +86,7 @@ versions:
         - url: doi:10.5281/zenodo.10705513/Guetschow_et_al_2024-PRIMAP-hist_v2.5.1_final_no_rounding_27-Feb-2024.csv
           hash: md5:5060d8af9afe3bc4d1d4cede13449dee
       author: Gütschow, Johannes; Pflüger, Mika ; Busch, Daniel
-      time_domain: [ 1750, 2022 ]
+      time_domain: [1750, 2022]
   - version: v2.6
     private: false
     dataset:
@@ -94,4 +94,20 @@ versions:
         - url: doi:10.5281/zenodo.13752654/Guetschow_et_al_2024a-PRIMAP-hist_v2.6_final_no_rounding_13-Sep-2024.csv
           hash: md5:a9d2d3958211b90885d149a89c27f10e
       author: Gütschow, Johannes; Busch, Daniel; Pflüger, Mika
-      time_domain: [ 1750, 2023 ]
+      time_domain: [1750, 2023]
+  - version: v2.6.1
+    private: false
+    dataset:
+      files:
+        - url: doi:10.5281/zenodo.15016289/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv
+          hash: md5:3ca1d72f9d67ea27e89f9b791726745b
+      author: Gütschow, Johannes; Busch, Daniel; Pflüger, Mika
+      time_domain: [1750, 2023]
+  - version: v2.7
+    private: false
+    dataset:
+      files:
+        - url: doi:10.5281/zenodo.17090760/Guetschow_et_al_2025a-PRIMAP-hist_v2.7_final_no_rounding_22-Aug-2025.csv
+          hash: md5:536a49c85a0af8f17ba9e78a53daf64f
+      author: Gütschow, Johannes; Busch, Daniel; Pflüger, Mika
+      time_domain: [1750, 2024]
