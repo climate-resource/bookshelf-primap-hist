@@ -1,6 +1,6 @@
 name: primap-hist
 edition: 5
-license: CC-BY
+license: CC-BY-NC
 description: |
   Comprehensive set of historical greenhouse gas emissions for every country.
 
@@ -100,6 +100,14 @@ versions:
     dataset:
       files:
         - url: doi:10.5281/zenodo.15016289/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv
-          hash: md5:388d317f54052d3dc6cf2f97eea5f81d
+          hash: md5:3ca1d72f9d67ea27e89f9b791726745b
       author: Gütschow, Johannes; Busch, Daniel; Pflüger, Mika
       time_domain: [1750, 2023]
+  - version: v2.7
+    private: false
+    dataset:
+      files:
+        - url: doi:10.5281/zenodo.17090760/Guetschow_et_al_2025a-PRIMAP-hist_v2.7_final_no_rounding_22-Aug-2025.csv
+          hash: md5:536a49c85a0af8f17ba9e78a53daf64f
+      author: Gütschow, Johannes; Busch, Daniel; Pflüger, Mika
+      time_domain: [1750, 2024]
