@@ -43,7 +43,7 @@ changelog-draft:  ## compile a draft of the next changelog
 
 .PHONY: virtual-environment
 virtual-environment:  ## update virtual environment, create a new one if it doesn't already exist
-	uv sync
+	uv sync --dev --all-extras
 	uvx pre-commit install
 
 run:  ## Generate the book

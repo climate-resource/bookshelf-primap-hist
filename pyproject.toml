@@ -11,10 +11,6 @@ dependencies = [
     "scmdata>=0.16.1",
 ]
 
-[tool.uv]
-# TODO: Remove once a release of bookshelf is made
-prerelease = "allow"
-
 [dependency-groups]
 dev = [
     "mypy>=1.11.2",
