@@ -33,6 +33,10 @@ ignore = [
     "S101",
     "PLR2004",
 ]
+# Standalone Jupytext build file: imports follow the papermill parameters cell.
+"build.py" = [
+    "E402",
+]
 
 [lint.isort]
 known-first-party = [
