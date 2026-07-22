@@ -47,8 +47,8 @@ virtual-environment:  ## update virtual environment, create a new one if it does
 	uvx pre-commit install
 
 run:  ## Generate the book
-	uv run bookshelf run primap-hist -o dist
+	uv run bookshelf-producer run primap-hist -o dist
 
 
 publish:  ## publish a new release of the project
-	uv run bookshelf publish primap-hist
+	uv run bookshelf-producer publish primap-hist

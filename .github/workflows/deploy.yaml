@@ -25,4 +25,4 @@ jobs:
       - name: Deploy to the Bookshelf
         run: |
             echo "Deploying to the Bookshelf"
-#          uv run bookshelf publish
+#          uv run bookshelf-producer publish
