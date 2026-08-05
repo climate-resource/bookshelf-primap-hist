@@ -1,7 +1,7 @@
 src = [
     "src",
 ]
-target-version = "py311"
+target-version = "py312"
 line-length = 88
 
 [lint]
@@ -37,7 +37,6 @@ ignore = [
 "build.py" = [
     "E402",
 ]
-
 [lint.isort]
 known-first-party = [
     "src",

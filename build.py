@@ -2,6 +2,9 @@
 # # PRIMAP-hist
 #
 # The PRIMAP-hist dataset of historical GHG emissions.
+#
+# The record path injects `-p name=value` overrides as module globals and drops the
+# matching assignment below, so every parameter has to stay a top-level assignment.
 
 # %% tags=["parameters"]
 version = "v2.6"
@@ -13,12 +16,11 @@ input_sha256 = "sha256:54c6d6c2983e8ffd9cb34d2ae7259877f74bb17de52ce135489c19f3c
 input_doi = "doi:10.5281/zenodo.13752654"
 
 # %%
-import asyncio
 import hashlib
 import re
 from pathlib import Path
 
-import bookshelf_client as bookshelf
+import bookshelf
 import httpx
 import pandas as pd
 import pycountry
@@ -35,7 +37,7 @@ bs, book = bookshelf.setup(version=version, visibility="public")
 
 
 # %%
-def fetch_input(url: str, expected_sha256: str) -> Path:
+def fetch_input(url: str, expected_sha256: str, version: str) -> Path:
     """Download `url` to a local cache path and verify its sha256."""
     cache = Path(".cache") / f"primap-hist-{version}.csv"
     cache.parent.mkdir(parents=True, exist_ok=True)
@@ -58,7 +60,7 @@ def fetch_input(url: str, expected_sha256: str) -> Path:
     return cache
 
 
-raw_path = fetch_input(input_url, input_sha256)
+raw_path = fetch_input(input_url, input_sha256, version)
 data_df = pd.read_csv(raw_path)
 data_df.head()
 
@@ -98,19 +100,19 @@ data["scenario"] = data["scenario"].str.replace("HISTCR", "Historical|Country Re
 data["scenario"] = data["scenario"].str.replace("HISTTP", "Historical|Third Party")
 
 # %%
-pattern = re.compile(r".*\((.*)\)")
-pattern_all_but = re.compile(r"(.*) \(.*")
+gwp_in_brackets = re.compile(r".*\((.*)\)")
+name_before_brackets = re.compile(r"(.*) \(.*")
 
 
 def extract_gwp_context(v: str) -> str | None:
     """Extract the GWP name from a variable."""
-    m = re.match(pattern, v)
+    m = gwp_in_brackets.match(v)
     return m.group(1) if m else None
 
 
 def remove_gwp_from_variable(v: str) -> str:
     """Remove the GWP name from a variable."""
-    m = re.match(pattern_all_but, v)
+    m = name_before_brackets.match(v)
     return m.group(1) if m else v
 
 
@@ -165,40 +167,34 @@ data_regions = data.filter(region=regions).drop_meta("country")
 # %% [markdown]
 # # Publish
 #
-# The raw CSV is re-hosted as a managed resource, and the two processed timeseries
-# are registered inside a process activity that declares the raw input as `used`.
-#
-# A pointer to the Zenodo copy would be the better provenance record, but a bundle
-# may not hold both an external pointer and an activity, so lineage wins.
+# The raw CSV is catalogued as an external pointer at its Zenodo URL, so the platform
+# never re-hosts the 132 MB input. The two processed timeseries are registered inside
+# a process activity that declares the pointer as `used`.
 
 
 # %%
-async def main() -> None:
-    """Register the raw input and the two derived timeseries, then publish."""
-    raw = await bs.register(
-        raw_path,
-        type="tabular",
-        logical_key=f"primap-hist/raw-{version}",
-        metadata={"doi": input_doi, "original_url": input_url},
+raw = bs.register_external(
+    type="tabular",
+    uri=input_url,
+    hash=input_sha256,
+    logical_key=f"primap-hist/raw-{version}",
+    metadata={"doi": input_doi},
+)
+
+with bs.activity(kind="process", config={"version": version}) as act:
+    by_country = act.register(
+        data_countries.timeseries().reset_index(),
+        type="timeseries",
+        logical_key=f"primap-hist/by_country-{version}",
+        used=[raw],
+    )
+    by_region = act.register(
+        data_regions.timeseries().reset_index(),
+        type="timeseries",
+        logical_key=f"primap-hist/by_region-{version}",
+        used=[raw],
     )
 
-    async with bs.activity(kind="process", parameters={"version": version}) as act:
-        by_country = await act.register(
-            data_countries.timeseries().reset_index(),
-            type="timeseries",
-            logical_key=f"primap-hist/by_country-{version}",
-            used=[raw.tracking_id],
-        )
-        by_region = await act.register(
-            data_regions.timeseries().reset_index(),
-            type="timeseries",
-            logical_key=f"primap-hist/by_region-{version}",
-            used=[raw.tracking_id],
-        )
-
-    book.attach(by_country, "by_country")
-    book.attach(by_region, "by_region")
-    book.publish()
-
-
-asyncio.run(main())
+book.attach(by_country, name_in_book="by_country")
+book.attach(by_region, name_in_book="by_region")
+book.publish()

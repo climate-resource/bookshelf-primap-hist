@@ -3,13 +3,16 @@ name = "bookshelf-primap-hist"
 version = "1.0.1a1"
 description = "PRIMAP-hist national historical emissions time series"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 dependencies = [
-    "bookshelf>=0.3.1b4",
-    "bookshelf-producer>=0.3.1b4",
+    "bookshelf[dataframes,publish,scmrun]",
+    "httpx>=0.27",
     "pycountry>=24.6.1",
     "scmdata>=0.16.1",
 ]
+
+[tool.uv.sources]
+bookshelf = { git = "https://github.com/climate-resource/bookshelf.git", branch = "feat/adopt-bookshelf-sdk", subdirectory = "packages/bookshelf" }
 
 [tool.uv]
 dev-dependencies = [

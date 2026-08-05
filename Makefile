@@ -14,7 +14,6 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-export BOOKSHELF_NOTEBOOK_DIRECTORY = src
 # TODO: Remove once a release of bookshelf is made
 export UV_PRERELEASE = allow
 
@@ -49,9 +48,10 @@ virtual-environment:  ## update virtual environment, create a new one if it does
 	uv sync
 	uvx pre-commit install
 
-run:  ## Generate the book
-	uv run bookshelf run primap-hist -o dist
+.PHONY: run
+run:  ## record the build file into a reviewable bundle
+	uv run python scripts/feedstock.py record
 
-
-publish:  ## publish a new release of the project
-	uv run bookshelf publish primap-hist
+.PHONY: publish
+publish:  ## replay the recorded bundle to the API, needs a write token
+	uv run python scripts/feedstock.py publish
