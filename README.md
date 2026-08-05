@@ -47,7 +47,11 @@ Pass `visibility=` on a single `activity.register(...)` call to narrow that one 
 so a public book can still hold a member only your organisation may read.
 
 Identical inputs must create identical data bytes and stable lineage identifiers.
-Change the hardcoded `version` in `build.py` when publishing a new data version.
+
+`build.py` holds a table of every published version and its upstream input.
+The `version` parameter picks the row, and it defaults to the newest.
+Record an older one with `uv run bookshelf record --force -p version=v2.6`.
+Adding a new data version means adding a row to that table and pointing `version` at it.
 
 The recorded bundle also carries the executed script/notebook, so its bundle hash covers the build source.
 Any edit to `build.py`, a comment included, produces a new bundle hash.

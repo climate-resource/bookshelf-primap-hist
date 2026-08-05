@@ -2,7 +2,7 @@
 
 Throwaway PoC migrating this feedstock to the Bookshelf Platform's shipped
 `record → bundle → replay` publish flow (bookshelf-platform issue #256).
-Scope: the latest public version, v2.6, only.
+Scope: the three current public versions, v2.6, v2.6.1 and v2.7.
 
 The feedstock now consumes the SDK from the `bookshelf` repo's
 `feat/adopt-bookshelf-sdk` branch, which folds the platform SDK into the public
@@ -39,6 +39,13 @@ Run it:
 make run        # record build.py into bundle/ and validate it
 make publish    # replay bundle/ to the API, needs a write token
 ```
+
+`build.py` carries a table of every published version and its upstream input,
+and `version` selects the row.
+`make run` records the default, and another version is recorded with
+`uv run bookshelf record --force -p version=v2.6`.
+Each version has to be recorded and replayed in its own run,
+because a bundle holds one book edition.
 
 Both targets are thin wrappers over the `bookshelf` CLI,
 which now ships `record`, `validate` and `publish` subcommands.

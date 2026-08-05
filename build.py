@@ -7,13 +7,7 @@
 # matching assignment below, so every parameter has to stay a top-level assignment.
 
 # %% tags=["parameters"]
-version = "v2.6"
-input_url = (
-    "https://zenodo.org/api/records/13752654/files/"
-    "Guetschow_et_al_2024a-PRIMAP-hist_v2.6_final_no_rounding_13-Sep-2024.csv/content"
-)
-input_sha256 = "sha256:54c6d6c2983e8ffd9cb34d2ae7259877f74bb17de52ce135489c19f3c8d51a72"
-input_doi = "doi:10.5281/zenodo.13752654"
+version = "v2.7"
 
 # %%
 import hashlib
@@ -26,6 +20,52 @@ import httpx
 import pandas as pd
 import pycountry
 import scmdata
+
+# %%
+# Zenodo publishes md5 for every file, but the record path asserts sha256,
+# so each digest below was taken from the downloaded file.
+inputs = {
+    "v2.6": {
+        "url": (
+            "https://zenodo.org/api/records/13752654/files/"
+            "Guetschow_et_al_2024a-PRIMAP-hist_v2.6_final_no_rounding_13-Sep-2024.csv"
+            "/content"
+        ),
+        "sha256": (
+            "sha256:54c6d6c2983e8ffd9cb34d2ae7259877f74bb17de52ce135489c19f3c8d51a72"
+        ),
+        "doi": "doi:10.5281/zenodo.13752654",
+    },
+    "v2.6.1": {
+        "url": (
+            "https://zenodo.org/api/records/15016289/files/"
+            "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv"
+            "/content"
+        ),
+        "sha256": (
+            "sha256:fb5e0c5ad2ba74a60e69d0c20d731ef3bba94ad06528af3740586f4289e65bf9"
+        ),
+        "doi": "doi:10.5281/zenodo.15016289",
+    },
+    "v2.7": {
+        "url": (
+            "https://zenodo.org/api/records/17090760/files/"
+            "Guetschow_et_al_2025a-PRIMAP-hist_v2.7_final_no_rounding_22-Aug-2025.csv"
+            "/content"
+        ),
+        "sha256": (
+            "sha256:77834f5f16197a463fe3df7e0eb3adda62a9e48355c9481926133986e35a9019"
+        ),
+        "doi": "doi:10.5281/zenodo.17090760",
+    },
+}
+
+if version not in inputs:
+    raise ValueError(f"unknown version {version!r}, expected one of {sorted(inputs)}")
+
+input_url = inputs[version]["url"]
+input_sha256 = inputs[version]["sha256"]
+input_doi = inputs[version]["doi"]
 
 # %%
 # Stable identifiers keep identical builds byte deterministic.
