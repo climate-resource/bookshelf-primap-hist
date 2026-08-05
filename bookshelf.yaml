@@ -1,6 +1,7 @@
 collection: primap-hist
-license: CC-BY-4.0
+license: MIT
+visibility: public
 authors:
-  - name: Jared Lewis
+  - name: "Jared Lewis"
     email: jared.lewis@climate-resource.com
 notebook: build.py

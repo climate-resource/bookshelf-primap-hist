@@ -14,10 +14,6 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-# TODO: Remove once a release of bookshelf is made
-export UV_PRERELEASE = allow
-
-
 .PHONY: help
 help:  ## print short description of each target
 	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -31,9 +27,9 @@ checks:  ## run all the linting checks of the codebase
 ruff-fixes:  ## fix the code using ruff
     # format before and after checking so that the formatted stuff is checked and
     # the fixed stuff is formatted
-	uvx ruff@0.6.9 format
-	uvx ruff@0.6.9 check --fix
-	uvx ruff@0.6.9 format
+	uvx ruff@0.15.22 format
+	uvx ruff@0.15.22 check --fix
+	uvx ruff@0.15.22 format
 
 #.PHONY: test
 #test:  ## run the tests
@@ -41,17 +37,23 @@ ruff-fixes:  ## fix the code using ruff
 
 .PHONY: changelog-draft
 changelog-draft:  ## compile a draft of the next changelog
-	uvx towncrier build --draft --version $(shell uv run python scripts/get-version.py)
+	uv run towncrier build --draft --version $(shell uv version --short)
 
 .PHONY: virtual-environment
 virtual-environment:  ## update virtual environment, create a new one if it doesn't already exist
 	uv sync
 	uvx pre-commit install
 
-.PHONY: run
-run:  ## record the build file into a reviewable bundle
-	uv run python scripts/feedstock.py record
+run:  ## Record and validate the book bundle
+    # --force because rebuilding is the point of this target.
+    # A bare `bookshelf record` refuses to replace a bundle that is under review.
+	uv run bookshelf record --force
+	uv run bookshelf validate
 
-.PHONY: publish
-publish:  ## replay the recorded bundle to the API, needs a write token
-	uv run python scripts/feedstock.py publish
+
+publish:  ## replay the recorded bundle to the Bookshelf API
+	uv run bookshelf publish
+
+
+publish-dry-run:  ## resolve the edition the bundle would publish to, without publishing
+	uv run bookshelf publish --dry-run

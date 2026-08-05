@@ -3,6 +3,7 @@
 name = "bookshelf-primap-hist"
 filename = "CHANGELOG.md"
 directory = "changelog/"
+# The human name is free text, so it is escaped rather than interpolated raw.
 title_format = "## PRIMAP-hist {version} ({project_date})"
 underlines = [
     "",

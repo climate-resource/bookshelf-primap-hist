@@ -1,5 +1,5 @@
 src = [
-    "src",
+    ".",
 ]
 target-version = "py312"
 line-length = 88
@@ -28,18 +28,18 @@ ignore = [
 ]
 
 [lint.per-file-ignores]
+"build.py" = [
+    "E402",
+]
 "test*.py" = [
     "D",
     "S101",
     "PLR2004",
 ]
-# Standalone Jupytext build file: imports follow the papermill parameters cell.
-"build.py" = [
-    "E402",
-]
+
 [lint.isort]
 known-first-party = [
-    "src",
+    "build",
 ]
 
 [lint.pydocstyle]

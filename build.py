@@ -27,7 +27,7 @@ import pycountry
 import scmdata
 
 # %%
-bs, book = bookshelf.setup(version=version, visibility="public")
+bs, book = bookshelf.setup(version=version)
 
 
 # %% [markdown]
