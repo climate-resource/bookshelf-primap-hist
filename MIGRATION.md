@@ -15,11 +15,11 @@ The dependency is pinned to that branch in `pyproject.toml` under
 Two new files replace the old `bookshelf-producer` config and notebook:
 
 - `bookshelf.yaml`: the slim recipe read by the record path, with `collection`,
-  `license`, `authors` and `notebook`.
-  Version, visibility, inputs, outputs and lineage all move *into the build file*.
+  `license`, `visibility`, `authors` and `notebook`.
+  Version, inputs, outputs and lineage all move *into the build file*.
   They are no longer declared here.
 - `build.py`: a standalone Jupytext `.py` build.
-  It calls `bookshelf.setup(version=..., visibility=...)` explicitly,
+  It calls `bookshelf.setup(version=...)` explicitly,
   fetches and hash-verifies the raw CSV,
   runs the same scmdata transform as the old notebook,
   then catalogues the Zenodo input as a pointer,
@@ -36,12 +36,12 @@ a marker-free file records identically, as one cell, and drops the `E402` exempt
 Run it:
 
 ```
-make run        # record build.py into bundle/
+make run        # record build.py into bundle/ and validate it
 make publish    # replay bundle/ to the API, needs a write token
 ```
 
-Both targets are thin wrappers over `scripts/feedstock.py`,
-which calls `run_record` and `replay_bundle_sync` directly.
+Both targets are thin wrappers over the `bookshelf` CLI,
+which now ships `record`, `validate` and `publish` subcommands.
 The record step is offline and produces a valid 72 MB bundle (`manifest.lock`):
 the raw input as a `pointer` with `generated: false`,
 both timeseries `generated: true` with `used` edges back to that pointer,
@@ -62,28 +62,19 @@ Each is a candidate fix for the SDK, the copier template or the public feedstock
    A slim file is rejected by the full loader,
    and a full file has its `books:` block silently ignored by the slim loader.
 
-2. **There is no `record` or `publish` CLI subcommand.**
-   The `bookshelf` console script covers `auth`, `cache`, `search` and `show` only,
-   so the publish flow is a Python API rather than a command.
-   Every feedstock has to carry its own driver,
-   which is what `scripts/feedstock.py` is.
-   It is deliberately shaped as `record` and `publish` subcommands over `run_record`
-   and `replay_bundle_sync`, so it can be lifted into the SDK CLI more or less as is.
-   Until then it belongs in the copier template.
-
-3. **Notebook capture is mandatory.**
+2. **Notebook capture is mandatory.**
    The recipe key is `notebook:` and the record path always captures an executed
    `.ipynb` plus its HTML render and attaches both as book entries,
    so `[publish]` (papermill, nbconvert) is required even for a build file with no cells.
    Making the capture opt-in would let a feedstock choose a plain script.
 
-4. **Build parameters must be top-level module assignments.**
+3. **Build parameters must be top-level module assignments.**
    `-p name=value` works by seeding module globals and dropping the matching top-level
    assignment before execution.
    A build file that wraps its work in `def main()` cannot be parameterised,
    so the record contract quietly forbids the obvious script shape.
 
-5. **A managed resource cannot be recorded outside an activity.**
+4. **A managed resource cannot be recorded outside an activity.**
    The producer facade exposes `activity()`, `register_external()` and `draft_book()`,
    but no top-level `register()`,
    and everything registered through an activity is forced to `generated: true`.
@@ -92,7 +83,7 @@ Each is a candidate fix for the SDK, the copier template or the public feedstock
    Using an external pointer sidesteps this,
    but a feedstock whose input has no stable public URL has no correct option.
 
-6. **Zenodo publishes md5, the recipe wants sha256.**
+5. **Zenodo publishes md5, the recipe wants sha256.**
    Every input hash upstream is `md5:`, but ingest and record hashes are `sha256:<hex>`.
    Getting the sha256 means downloading the full file first
    (132 MB here, roughly three minutes over a home connection).
@@ -108,6 +99,10 @@ Each is a candidate fix for the SDK, the copier template or the public feedstock
   Previously it was silently ignored and the book was recorded under the wrong version.
 - **The CLI no longer needs an extra to import.**
   `typer` is a core dependency of the SDK rather than an optional one.
+- **`record`, `validate` and `publish` are CLI subcommands.**
+  The publish flow was a Python API only, so every feedstock had to carry its own driver.
+  The copier template now drives the shipped commands from the `Makefile` and from CI,
+  and this feedstock no longer carries a publishing script of its own.
 - **External-pointer lineage is expressable.**
   A bundle may now hold both a pointer and an activity,
   so the raw CSV is catalogued at its Zenodo URL
@@ -119,8 +114,10 @@ Each is a candidate fix for the SDK, the copier template or the public feedstock
 
 ## Not covered
 
-- The legacy V1 notebook (`src/primap-hist.py`, `src/primap-hist.yaml`) and the tests
-  under `tests/` still target the retired `bookshelf-producer` API and no longer import.
+- The tests under `tests/` still target the retired `bookshelf-producer` API,
+  and `pytest` cannot even collect them.
+  They exercised the legacy V1 notebook, which the template update removed,
+  so their unit and category assertions would have to be rewritten against the recorded bundle.
   They are left in place pending a decision on the historic versions they cover.
 - Replay to staging was blocked by a staging agent-claim sign-in loop
   (bookshelf-platform PR #285).
