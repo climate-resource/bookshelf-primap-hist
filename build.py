@@ -19,12 +19,25 @@ input_doi = "doi:10.5281/zenodo.13752654"
 import hashlib
 import re
 from pathlib import Path
+from uuid import NAMESPACE_URL, uuid5
 
 import bookshelf
 import httpx
 import pandas as pd
 import pycountry
 import scmdata
+
+# %%
+# Stable identifiers keep identical builds byte deterministic.
+resource_namespace = "https://github.com/climate-resource/bookshelf-primap-hist"
+raw_tracking_id = uuid5(NAMESPACE_URL, f"{resource_namespace}/raw/{version}")
+by_country_tracking_id = uuid5(
+    NAMESPACE_URL, f"{resource_namespace}/by_country/{version}"
+)
+by_region_tracking_id = uuid5(
+    NAMESPACE_URL, f"{resource_namespace}/by_region/{version}"
+)
+process_activity_id = uuid5(NAMESPACE_URL, f"{resource_namespace}/process/{version}")
 
 # %%
 bs, book = bookshelf.setup(version=version)
@@ -179,20 +192,27 @@ raw = bs.register_external(
     hash=input_sha256,
     logical_key=f"primap-hist/raw-{version}",
     metadata={"doi": input_doi},
+    tracking_id=raw_tracking_id,
 )
 
-with bs.activity(kind="process", config={"version": version}) as act:
+with bs.activity(
+    kind="process",
+    config={"version": version},
+    activity_id=process_activity_id,
+) as act:
     by_country = act.register(
         data_countries.timeseries().reset_index(),
         type="timeseries",
         logical_key=f"primap-hist/by_country-{version}",
         used=[raw],
+        tracking_id=by_country_tracking_id,
     )
     by_region = act.register(
         data_regions.timeseries().reset_index(),
         type="timeseries",
         logical_key=f"primap-hist/by_region-{version}",
         used=[raw],
+        tracking_id=by_region_tracking_id,
     )
 
 book.attach(by_country, name_in_book="by_country")
