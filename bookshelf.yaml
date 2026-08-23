@@ -34,7 +34,6 @@ defaults:
     The PRIMAP-hist national historical emissions time series,
     Earth Syst. Sci. Data, 8, 571-603, doi:10.5194/essd-8-571-2016.
     Cite the DOI of the precise dataset version used as well.
-  license_url: https://creativecommons.org/licenses/by/4.0/
   intended_uses: >-
     Country level historical emissions by gas and sector for climate policy analysis,
     target tracking and as a harmonised input to other datasets.
@@ -63,6 +62,7 @@ build:
 books:
   - version: "v2.6"
     license: CC-BY-4.0
+    license_url: https://creativecommons.org/licenses/by/4.0/
     doi: 10.5281/zenodo.13752654
     release_date: 2024-09-13
     release_url: https://zenodo.org/records/13752654
@@ -77,6 +77,7 @@ books:
         sha256: 54c6d6c2983e8ffd9cb34d2ae7259877f74bb17de52ce135489c19f3c8d51a72
   - version: "v2.6.1"
     license: CC-BY-4.0
+    license_url: https://creativecommons.org/licenses/by/4.0/
     doi: 10.5281/zenodo.15016289
     release_date: 2025-03-13
     release_url: https://zenodo.org/records/15016289

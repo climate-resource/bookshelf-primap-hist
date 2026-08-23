@@ -35,7 +35,7 @@ captures, and it emits every chunk as a code cell,
 so `# %% [markdown]` sections are not rendered as prose in `build.html`.
 Their value is the editor experience and the per-step chunking of the captured evidence.
 Dropping them is a live option:
-a marker-free file records identically, as one cell, and drops the `E402` exemption.
+a marker-free file records identically, as one cell.
 
 Run it:
 
@@ -46,7 +46,7 @@ make publish            # replay bundle/ to the API, needs a write token
 
 `--version` is required.
 The recipe names no default, so a version is stated exactly once, on the command line,
-and `make run` passes `VERSION`, which defaults to the newest.
+and `make run` passes `VERSION`, which the Makefile defaults to v2.7.
 Each version has to be recorded and replayed in its own run,
 because a bundle holds one book edition.
 

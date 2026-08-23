@@ -2,17 +2,15 @@ from datetime import date
 from pathlib import Path
 
 import pytest
-from bookshelf.publisher.recipe import load_record_recipe
-
-RECIPE = Path(__file__).parent.parent / "bookshelf.yaml"
-VERSIONS = ("v2.6", "v2.6.1", "v2.7")
+from bookshelf.publisher import load_record_recipe
+from conftest import ROOT, VERSIONS
 
 UPSTREAM_AUTHORS = ("Gütschow, Johannes", "Busch, Daniel", "Pflüger, Mika")
 
 
 @pytest.fixture(scope="module")
 def recipe():
-    return load_record_recipe(RECIPE)
+    return load_record_recipe(ROOT / "bookshelf.yaml")
 
 
 def test_volume(recipe):
@@ -55,6 +53,11 @@ def test_book_states_its_own_release(recipe, version, record, release_date, lice
     discovery = book.discovery
 
     assert book.license == license
+    licence_path = license.removeprefix("CC-").removesuffix("-4.0").lower()
+    assert (
+        discovery.license_url
+        == f"https://creativecommons.org/licenses/{licence_path}/4.0/"
+    )
     assert discovery.doi == f"10.5281/zenodo.{record}"
     assert discovery.release_date == release_date
     assert discovery.release_url == f"https://zenodo.org/records/{record}"
@@ -72,11 +75,3 @@ def test_raw_resource_is_complete(recipe, version):
     assert version.removeprefix("v") in raw.uri
     assert raw.path is None
     assert len(raw.sha256) == 64
-
-
-def test_license_url_follows_the_license(recipe):
-    by = recipe.resolve("v2.6.1").discovery.license_url
-    by_nc_sa = recipe.resolve("v2.7").discovery.license_url
-
-    assert by == "https://creativecommons.org/licenses/by/4.0/"
-    assert by_nc_sa == "https://creativecommons.org/licenses/by-nc-sa/4.0/"

@@ -21,7 +21,7 @@ and the raw Zenodo CSV it is built from.
 The source code that builds a book is in `build.py`.
 It holds the processing and nothing else, because the facts live in the recipe.
 
-A book is recorded with `make run`, which defaults to the newest version.
+A book is recorded with `make run`, which defaults to the `VERSION` set in the Makefile.
 Pick another with `make run VERSION=v2.6`.
 This creates a validated local bundle in `bundle/` without API credentials.
 Each version is recorded and published in its own run, because a bundle holds one book.
