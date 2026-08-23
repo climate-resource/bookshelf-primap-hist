@@ -12,18 +12,22 @@ The dependency is pinned to that branch in `pyproject.toml` under
 
 ## What the migration is
 
-Two new files replace the old `bookshelf-producer` config and notebook:
+Two files replace the old `bookshelf-producer` config and notebook:
 
-- `bookshelf.yaml`: the slim recipe read by the record path, with `collection`,
-  `license`, `visibility`, `authors` and `notebook`.
-  Version, inputs, outputs and lineage all move *into the build file*.
-  They are no longer declared here.
-- `build.py`: a standalone Jupytext `.py` build.
-  It calls `bookshelf.setup(version=...)` explicitly,
-  fetches and hash-verifies the raw CSV,
+- `bookshelf.yaml`: the sectioned recipe.
+  `volume:` names the collection, its maintainers and its keywords.
+  `defaults:` holds what every book shares: title, description, publisher, citation,
+  the upstream authors, the URLs, the visibility and the `type` of the raw resource.
+  `books:` lists one entry per PRIMAP-hist version.
+  Each states only its licence, DOI, release date, release notes
+  and the URL and sha256 of the raw CSV.
+  Licence, visibility and discovery metadata are merged field by field, and the book wins.
+- `build.py`: a standalone Jupytext `.py` build holding only the processing.
+  It calls `bookshelf.setup()` once, with no version,
+  reads the raw CSV through `build.use("raw")`,
+  which fetches, verifies the sha256 and catalogues the Zenodo file as a pointer,
   runs the same scmdata transform as the old notebook,
-  then catalogues the Zenodo input as a pointer,
-  registers the outputs inside a `process` activity and publishes.
+  then writes both timeseries with `build.book.write(..., used=[raw])` and publishes.
 
 The `# %%` framing is kept, but it is worth knowing what it does and does not buy.
 The record path splits the source on those markers only to chunk the evidence notebook it
@@ -36,23 +40,47 @@ a marker-free file records identically, as one cell, and drops the `E402` exempt
 Run it:
 
 ```
-make run        # record build.py into bundle/ and validate it
-make publish    # replay bundle/ to the API, needs a write token
+make run VERSION=v2.6   # record one book into bundle/ and validate it
+make publish            # replay bundle/ to the API, needs a write token
 ```
 
-`build.py` carries a table of every published version and its upstream input,
-and `version` selects the row.
-`make run` records the default, and another version is recorded with
-`uv run bookshelf record --force -p version=v2.6`.
+`--version` is required.
+The recipe names no default, so a version is stated exactly once, on the command line,
+and `make run` passes `VERSION`, which defaults to the newest.
 Each version has to be recorded and replayed in its own run,
 because a bundle holds one book edition.
 
 Both targets are thin wrappers over the `bookshelf` CLI,
 which now ships `record`, `validate` and `publish` subcommands.
-The record step is offline and produces a valid 72 MB bundle (`manifest.lock`):
+The record step is offline and produces a valid bundle (`manifest.lock`):
 the raw input as a `pointer` with `generated: false`,
 both timeseries `generated: true` with `used` edges back to that pointer,
 plus the executed notebook and HTML as document entries.
+
+### Where the metadata came from
+
+Every discovery field was taken from the three Zenodo records and the ESSD paper
+(Gütschow et al. 2016, doi:10.5194/essd-8-571-2016).
+
+- The authors are the Zenodo creators, with their ORCIDs.
+  They sit under `defaults:` and are overridden on v2.7,
+  where Gütschow's affiliation changed.
+  The recipe has no `authors` on a resource, so they cannot be attached to the raw CSV itself.
+  Jared is a `maintainer` on the volume rather than an author.
+- The licence is per record and differs:
+  v2.6 and v2.6.1 are `CC-BY-4.0`, and v2.7 is `CC-BY-NC-SA-4.0`.
+  The earlier PoC declared `CC-BY-NC` for all three, which was wrong on both counts.
+- `release_date` is the Zenodo publication date, not the date in the file name.
+  v2.7's file is dated 22 August 2025 and the record was published on 15 September 2025.
+- The platform's `volume_metadata.yaml` carries a `primap-hist` block that mixes
+  the v2.6 DOI into a v2.7 description.
+  The recipe supersedes it.
+
+### Identifiers
+
+The `uuid5` tracking ids and activity id from the earlier PoC are gone.
+The bundle never stored them, so the recorded bytes were already independent of them,
+and the platform assigns tracking ids on replay.
 
 ## Where it hurt
 
@@ -121,11 +149,9 @@ Each is a candidate fix for the SDK, the copier template or the public feedstock
 
 ## Not covered
 
-- The tests under `tests/` still target the retired `bookshelf-producer` API,
-  and `pytest` cannot even collect them.
-  They exercised the legacy V1 notebook, which the template update removed,
-  so their unit and category assertions would have to be rewritten against the recorded bundle.
-  They are left in place pending a decision on the historic versions they cover.
+- The shared `feedstock-ci` and `feedstock-publish` workflows in `copier-bookshelf-dataset`
+  run a bare `bookshelf record`, which now exits non-zero because `--version` is required.
+  CI for this feedstock stays red until those workflows take a version.
 - Replay to staging was blocked by a staging agent-claim sign-in loop
   (bookshelf-platform PR #285).
   The bundle is valid and ready to replay once a write token is available.
