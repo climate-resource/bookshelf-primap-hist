@@ -2,8 +2,6 @@
 # # PRIMAP-hist
 #
 # The PRIMAP-hist dataset of historical GHG emissions.
-# The version, licence, discovery metadata and the raw input are declared in
-# `bookshelf.yaml`, and `bookshelf record --version` picks the book to build.
 
 # %%
 import re
@@ -127,8 +125,6 @@ data_regions = data.filter(region=regions).drop_meta("country")
 
 # %% [markdown]
 # # Publish
-#
-# The two processed timeseries are written with the raw pointer as `used`.
 
 # %%
 build.book.write(

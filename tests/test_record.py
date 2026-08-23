@@ -52,6 +52,7 @@ def test_record_and_validate(tmp_path, version):
     assert manifest["book"]["discovery"]["doi"].startswith("10.5281/zenodo.")
 
 
+@pytest.mark.record
 def test_record_without_version_names_the_books(tmp_path):
     result = bookshelf("record", "--bundle", str(tmp_path / "bundle"), check=False)
 
