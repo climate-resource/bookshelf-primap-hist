@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "bookshelf[dataframes,publish,scmrun]",
-    "httpx>=0.27",
     "pandas>=2.2",
     "pycountry>=24.6.1",
     "scmdata>=0.16.1",
@@ -24,3 +23,7 @@ dev = [
 [tool.uv.sources]
 # Using an unpublished branch for testing
 bookshelf = { git = "https://github.com/climate-resource/bookshelf", branch = "feat/adopt-bookshelf-sdk", subdirectory = "packages/bookshelf" }
+
+[tool.pytest.ini_options]
+markers = ["record: records and validates a bundle through the CLI, fetching the raw input"]
+addopts = "-m 'not record'"

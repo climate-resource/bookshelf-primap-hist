@@ -1,7 +1,116 @@
-collection: primap-hist
-license: CC-BY-NC
-visibility: public
-authors:
-  - name: "Jared Lewis"
-    email: jared.lewis@climate-resource.com
-notebook: build.py
+volume:
+  name: primap-hist
+  maintainers:
+    - name: Jared Lewis
+      email: jared.lewis@climate-resource.com
+      affiliation: Climate Resource
+  keywords:
+    - ghg
+    - co2
+    - methane
+    - nitrous-oxide
+    - f-gases
+    - emissions
+    - country-reported
+    - historical
+  update_cadence: annual
+
+defaults:
+  title: PRIMAP-hist
+  description: >-
+    National historical greenhouse gas emissions for every country and Kyoto gas from 1750,
+    combining country reported inventories with third party data to fill the gaps.
+    The data resolves the main IPCC 2006 categories,
+    and carries a country reported priority scenario and a third party priority scenario.
+    LULUCF emissions are not included.
+  publisher: Potsdam Institute for Climate Impact Research
+  publisher_url: https://www.pik-potsdam.de/
+  homepage_url: https://primap.org/primap-hist/
+  documentation_url: https://primap.org/primap-hist/
+  methodology_url: https://doi.org/10.5194/essd-8-571-2016
+  repository_url: https://github.com/JGuetschow/PRIMAP-hist
+  citation: >-
+    Gütschow, J.; Jeffery, L.; Gieseke, R.; Gebel, R.; Stevens, D.; Krapp, M.; Rocha, M. (2016):
+    The PRIMAP-hist national historical emissions time series,
+    Earth Syst. Sci. Data, 8, 571-603, doi:10.5194/essd-8-571-2016.
+    Cite the DOI of the precise dataset version used as well.
+  license_url: https://creativecommons.org/licenses/by/4.0/
+  intended_uses: >-
+    Country level historical emissions by gas and sector for climate policy analysis,
+    target tracking and as a harmonised input to other datasets.
+  limitations: >-
+    The uncertainties of the underlying inventories do not justify the significant digits carried,
+    so small differences between countries or years are not meaningful.
+    The most recent year is extrapolated where no reported or third party data exist.
+    Read the uncertainties and limitations sections of the methodology paper before use.
+  authors:
+    - name: Gütschow, Johannes
+      orcid: 0000-0001-9944-3685
+      affiliation: Climate Resource
+    - name: Busch, Daniel
+      affiliation: Climate Resource
+    - name: Pflüger, Mika
+      orcid: 0000-0002-7814-8916
+      affiliation: Climate Resource
+  visibility: public
+  resources:
+    raw:
+      type: tabular
+
+build:
+  notebook: build.py
+
+books:
+  - version: "v2.6"
+    license: CC-BY-4.0
+    doi: 10.5281/zenodo.13752654
+    release_date: 2024-09-13
+    release_url: https://zenodo.org/records/13752654
+    description: >-
+      Covers 1750 to 2023.
+      Country reported data are the annual CRF submissions for Annex I parties
+      and the UNFCCC DI portal plus BUR, NC and NIR submissions for non Annex I parties.
+      Gaps are filled from CDIAC, EI, Andrew cement, FAOSTAT, EDGAR v8.0 and EDGAR v7.0.
+    resources:
+      raw:
+        uri: https://zenodo.org/api/records/13752654/files/Guetschow_et_al_2024a-PRIMAP-hist_v2.6_final_no_rounding_13-Sep-2024.csv/content
+        sha256: 54c6d6c2983e8ffd9cb34d2ae7259877f74bb17de52ce135489c19f3c8d51a72
+  - version: "v2.6.1"
+    license: CC-BY-4.0
+    doi: 10.5281/zenodo.15016289
+    release_date: 2025-03-13
+    release_url: https://zenodo.org/records/15016289
+    description: >-
+      Covers 1750 to 2023.
+      Replaces most of the unofficial 2023 data in v2.6 with the Common Reporting Tables
+      countries have since submitted with their Biennial Transparency Reports,
+      and gap fills all non energy sectors and gases from EDGAR 2024.
+    resources:
+      raw:
+        uri: https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv/content
+        sha256: fb5e0c5ad2ba74a60e69d0c20d731ef3bba94ad06528af3740586f4289e65bf9
+  - version: "v2.7"
+    license: CC-BY-NC-SA-4.0
+    license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+    doi: 10.5281/zenodo.17090760
+    release_date: 2025-09-15
+    release_url: https://zenodo.org/records/17090760
+    description: >-
+      Covers 1750 to 2024.
+      Country reported data come from the Common Reporting Tables where available,
+      the USA are taken from the draft EPA inventory obtained by EDF,
+      and 2024 is extrapolated from a five year trend where no data exist.
+      Released under CC-BY-NC-SA-4.0 rather than CC-BY-4.0.
+    authors:
+      - name: Gütschow, Johannes
+        orcid: 0000-0001-9944-3685
+        affiliation: Freelance Climate Data Scientist
+      - name: Busch, Daniel
+        affiliation: Climate Resource
+      - name: Pflüger, Mika
+        orcid: 0000-0002-7814-8916
+        affiliation: Climate Resource
+    resources:
+      raw:
+        uri: https://zenodo.org/api/records/17090760/files/Guetschow_et_al_2025a-PRIMAP-hist_v2.7_final_no_rounding_22-Aug-2025.csv/content
+        sha256: 77834f5f16197a463fe3df7e0eb3adda62a9e48355c9481926133986e35a9019

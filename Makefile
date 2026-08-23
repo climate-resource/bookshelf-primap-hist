@@ -31,9 +31,9 @@ ruff-fixes:  ## fix the code using ruff
 	uvx ruff@0.15.22 check --fix
 	uvx ruff@0.15.22 format
 
-#.PHONY: test
-#test:  ## run the tests
-#	uv run pytest src tests -r a -v --doctest-modules --cov=src
+.PHONY: test
+test:  ## run the tests
+	uv run pytest tests -r a -v
 
 .PHONY: changelog-draft
 changelog-draft:  ## compile a draft of the next changelog
@@ -44,10 +44,12 @@ virtual-environment:  ## update virtual environment, create a new one if it does
 	uv sync
 	uvx pre-commit install
 
-run:  ## Record and validate the book bundle
+VERSION ?= v2.7
+
+run:  ## Record and validate one book, selected with VERSION=vX.Y
     # --force because rebuilding is the point of this target.
     # A bare `bookshelf record` refuses to replace a bundle that is under review.
-	uv run bookshelf record --force
+	uv run bookshelf record --force --version $(VERSION)
 	uv run bookshelf validate
 
 

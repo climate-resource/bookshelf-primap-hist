@@ -2,119 +2,27 @@
 # # PRIMAP-hist
 #
 # The PRIMAP-hist dataset of historical GHG emissions.
-#
-# The record path injects `-p name=value` overrides as module globals and drops the
-# matching assignment below, so every parameter has to stay a top-level assignment.
-
-# %% tags=["parameters"]
-version = "v2.7"
+# The version, licence, discovery metadata and the raw input are declared in
+# `bookshelf.yaml`, and `bookshelf record --version` picks the book to build.
 
 # %%
-import hashlib
 import re
-from pathlib import Path
-from uuid import NAMESPACE_URL, uuid5
 
 import bookshelf
-import httpx
 import pandas as pd
 import pycountry
 import scmdata
 
-# %%
-# Zenodo publishes md5 for every file, but the record path asserts sha256,
-# so each digest below was taken from the downloaded file.
-inputs = {
-    "v2.6": {
-        "url": (
-            "https://zenodo.org/api/records/13752654/files/"
-            "Guetschow_et_al_2024a-PRIMAP-hist_v2.6_final_no_rounding_13-Sep-2024.csv"
-            "/content"
-        ),
-        "sha256": (
-            "sha256:54c6d6c2983e8ffd9cb34d2ae7259877f74bb17de52ce135489c19f3c8d51a72"
-        ),
-        "doi": "doi:10.5281/zenodo.13752654",
-    },
-    "v2.6.1": {
-        "url": (
-            "https://zenodo.org/api/records/15016289/files/"
-            "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv"
-            "/content"
-        ),
-        "sha256": (
-            "sha256:fb5e0c5ad2ba74a60e69d0c20d731ef3bba94ad06528af3740586f4289e65bf9"
-        ),
-        "doi": "doi:10.5281/zenodo.15016289",
-    },
-    "v2.7": {
-        "url": (
-            "https://zenodo.org/api/records/17090760/files/"
-            "Guetschow_et_al_2025a-PRIMAP-hist_v2.7_final_no_rounding_22-Aug-2025.csv"
-            "/content"
-        ),
-        "sha256": (
-            "sha256:77834f5f16197a463fe3df7e0eb3adda62a9e48355c9481926133986e35a9019"
-        ),
-        "doi": "doi:10.5281/zenodo.17090760",
-    },
-}
-
-if version not in inputs:
-    raise ValueError(f"unknown version {version!r}, expected one of {sorted(inputs)}")
-
-input_url = inputs[version]["url"]
-input_sha256 = inputs[version]["sha256"]
-input_doi = inputs[version]["doi"]
-
-# %%
-# Stable identifiers keep identical builds byte deterministic.
-resource_namespace = "https://github.com/climate-resource/bookshelf-primap-hist"
-raw_tracking_id = uuid5(NAMESPACE_URL, f"{resource_namespace}/raw/{version}")
-by_country_tracking_id = uuid5(
-    NAMESPACE_URL, f"{resource_namespace}/by_country/{version}"
-)
-by_region_tracking_id = uuid5(
-    NAMESPACE_URL, f"{resource_namespace}/by_region/{version}"
-)
-process_activity_id = uuid5(NAMESPACE_URL, f"{resource_namespace}/process/{version}")
-
-# %%
-bs, book = bookshelf.setup(version=version)
-
-
 # %% [markdown]
 # # Fetch
 #
-# The raw CSV is fetched and its sha256 verified against the declared assertion.
-
+# The raw CSV is fetched, verified against the sha256 in the recipe and catalogued
+# as an external pointer at its Zenodo URL, so the platform never re-hosts it.
 
 # %%
-def fetch_input(url: str, expected_sha256: str, version: str) -> Path:
-    """Download `url` to a local cache path and verify its sha256."""
-    cache = Path(".cache") / f"primap-hist-{version}.csv"
-    cache.parent.mkdir(parents=True, exist_ok=True)
-    if not cache.exists():
-        with httpx.stream("GET", url, follow_redirects=True, timeout=600) as resp:
-            resp.raise_for_status()
-            with cache.open("wb") as fh:
-                for chunk in resp.iter_bytes(1 << 20):
-                    fh.write(chunk)
-
-    digest = hashlib.sha256()
-    with cache.open("rb") as fh:
-        for chunk in iter(lambda: fh.read(1 << 20), b""):
-            digest.update(chunk)
-    actual = f"sha256:{digest.hexdigest()}"
-    if actual != expected_sha256:
-        raise ValueError(
-            f"hash mismatch for {url}: expected {expected_sha256}, got {actual}"
-        )
-    return cache
-
-
-raw_path = fetch_input(input_url, input_sha256, version)
-data_df = pd.read_csv(raw_path)
+build = bookshelf.setup()
+raw = build.use("raw")
+data_df = pd.read_csv(raw.path)
 data_df.head()
 
 # %% [markdown]
@@ -220,41 +128,19 @@ data_regions = data.filter(region=regions).drop_meta("country")
 # %% [markdown]
 # # Publish
 #
-# The raw CSV is catalogued as an external pointer at its Zenodo URL, so the platform
-# never re-hosts the 132 MB input. The two processed timeseries are registered inside
-# a process activity that declares the pointer as `used`.
-
+# The two processed timeseries are written with the raw pointer as `used`.
 
 # %%
-raw = bs.register_external(
-    type="tabular",
-    uri=input_url,
-    hash=input_sha256,
-    logical_key=f"primap-hist/raw-{version}",
-    metadata={"doi": input_doi},
-    tracking_id=raw_tracking_id,
+build.book.write(
+    "by_country",
+    data_countries.timeseries().reset_index(),
+    type="timeseries",
+    used=[raw],
 )
-
-with bs.activity(
-    kind="process",
-    config={"version": version},
-    activity_id=process_activity_id,
-) as act:
-    by_country = act.register(
-        data_countries.timeseries().reset_index(),
-        type="timeseries",
-        logical_key=f"primap-hist/by_country-{version}",
-        used=[raw],
-        tracking_id=by_country_tracking_id,
-    )
-    by_region = act.register(
-        data_regions.timeseries().reset_index(),
-        type="timeseries",
-        logical_key=f"primap-hist/by_region-{version}",
-        used=[raw],
-        tracking_id=by_region_tracking_id,
-    )
-
-book.attach(by_country, name_in_book="by_country")
-book.attach(by_region, name_in_book="by_region")
-book.publish()
+build.book.write(
+    "by_region",
+    data_regions.timeseries().reset_index(),
+    type="timeseries",
+    used=[raw],
+)
+build.book.publish()

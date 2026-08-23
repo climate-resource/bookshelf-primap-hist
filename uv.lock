@@ -127,7 +127,7 @@ css = [
 [[package]]
 name = "bookshelf"
 version = "0.4.4a1"
-source = { git = "https://github.com/climate-resource/bookshelf?subdirectory=packages%2Fbookshelf&branch=feat%2Fadopt-bookshelf-sdk#50e3a4a5a64cf9a8452200d6cce25b9f8ee0f2d0" }
+source = { git = "https://github.com/climate-resource/bookshelf?subdirectory=packages%2Fbookshelf&branch=feat%2Fadopt-bookshelf-sdk#6ea3e39d9dde3211e548ca48e2558f1d5faded62" }
 dependencies = [
     { name = "gitpython" },
     { name = "httpx" },
@@ -158,7 +158,6 @@ version = "1.0.1a1"
 source = { virtual = "." }
 dependencies = [
     { name = "bookshelf", extra = ["dataframes", "publish", "scmrun"] },
-    { name = "httpx" },
     { name = "pandas" },
     { name = "pycountry" },
     { name = "scmdata" },
@@ -176,7 +175,6 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "bookshelf", extras = ["dataframes", "publish", "scmrun"], git = "https://github.com/climate-resource/bookshelf?subdirectory=packages%2Fbookshelf&branch=feat%2Fadopt-bookshelf-sdk" },
-    { name = "httpx", specifier = ">=0.27" },
     { name = "pandas", specifier = ">=2.2" },
     { name = "pycountry", specifier = ">=24.6.1" },
     { name = "scmdata", specifier = ">=0.16.1" },
