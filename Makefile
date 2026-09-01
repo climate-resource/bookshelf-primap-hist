@@ -2,6 +2,11 @@
 
 .DEFAULT_GOAL := help
 
+# A bundle holds one book, so the version selects both what is recorded and where it lands.
+# CI records every version the recipe declares. Locally you pick one.
+VERSION ?= v2.7
+BUNDLE := bundle/$(VERSION)
+
 # A helper script to get short descriptions of each target in the Makefile
 define PRINT_HELP_PYSCRIPT
 import re, sys
@@ -13,11 +18,6 @@ for line in sys.stdin:
 		print("%-30s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
-
-export BOOKSHELF_NOTEBOOK_DIRECTORY = src
-# TODO: Remove once a release of bookshelf is made
-export UV_PRERELEASE = allow
-
 
 .PHONY: help
 help:  ## print short description of each target
@@ -32,9 +32,9 @@ checks:  ## run all the linting checks of the codebase
 ruff-fixes:  ## fix the code using ruff
     # format before and after checking so that the formatted stuff is checked and
     # the fixed stuff is formatted
-	uvx ruff@0.6.9 format
-	uvx ruff@0.6.9 check --fix
-	uvx ruff@0.6.9 format
+	uvx ruff@0.15.22 format
+	uvx ruff@0.15.22 check --fix
+	uvx ruff@0.15.22 format
 
 #.PHONY: test
 #test:  ## run the tests
@@ -42,16 +42,35 @@ ruff-fixes:  ## fix the code using ruff
 
 .PHONY: changelog-draft
 changelog-draft:  ## compile a draft of the next changelog
-	uvx towncrier build --draft --version $(shell uv run python scripts/get-version.py)
+	uv run towncrier build --draft --version $(shell uv version --short)
 
 .PHONY: virtual-environment
 virtual-environment:  ## update virtual environment, create a new one if it doesn't already exist
 	uv sync
 	uvx pre-commit install
 
-run:  ## Generate the book
-	uv run bookshelf run primap-hist -o dist
+.PHONY: initial-setup
+initial-setup:  ## prepare a freshly generated feedstock, safe to re-run
+    # Recording derives provenance from git, so it needs an origin remote and a commit
+    # to point at. CI syncs with `--locked`, so it needs a lock file alongside them.
+	@[ -d .git ] || git init
+	@git remote get-url origin >/dev/null 2>&1 || git remote add origin https://github.com/climate-resource/bookshelf-primap-hist
+	@[ -f uv.lock ] || uv lock
+	@git add .
+	@git rev-parse HEAD >/dev/null 2>&1 \
+		|| git -c user.name="Jared Lewis" -c user.email="jared.lewis@climate-resource.com" \
+		commit -q -m "Initial scaffold from copier-bookshelf-dataset"
+
+run:  ## Record and validate one book, selected with VERSION=vX.Y.Z
+    # --force because rebuilding is the point of this target.
+    # A bare `bookshelf record` refuses to replace a bundle that is under review.
+	uv run bookshelf record --force --version $(VERSION) --bundle $(BUNDLE)
+	uv run bookshelf validate $(BUNDLE)
 
 
-publish:  ## publish a new release of the project
-	uv run bookshelf publish primap-hist
+publish:  ## replay the recorded bundle to the Bookshelf API
+	uv run bookshelf publish $(BUNDLE)
+
+
+publish-dry-run:  ## resolve the edition the bundle would publish to, without publishing
+	uv run bookshelf publish $(BUNDLE) --dry-run
