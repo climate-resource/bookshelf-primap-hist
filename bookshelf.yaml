@@ -1,8 +1,11 @@
 volume:
   name: primap-hist
   maintainers:
-    - name: Jared Lewis
-      email: jared.lewis@climate-resource.com
+    - name: Fuchsi* Huber
+      email: fuchsi.huber@climate-resource.com
+      affiliation: Climate Resource
+    - name: Mika Pflüger
+      email: mika.pflueger@climate-resource.com
       affiliation: Climate Resource
   keywords:
     - ghg
