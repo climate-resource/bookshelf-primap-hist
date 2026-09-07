@@ -1,7 +1,7 @@
 src = [
-    "src",
+    ".",
 ]
-target-version = "py311"
+target-version = "py312"
 line-length = 88
 
 [lint]
@@ -12,6 +12,7 @@ select = [
     "I",
     "D",
     "PL",
+    "TRY",
     "NPY",
     "RUF",
     "UP",
@@ -28,6 +29,9 @@ ignore = [
 ]
 
 [lint.per-file-ignores]
+"build.py" = [
+    "E402",
+]
 "test*.py" = [
     "D",
     "S101",
@@ -36,7 +40,7 @@ ignore = [
 
 [lint.isort]
 known-first-party = [
-    "src",
+    "build",
 ]
 
 [lint.pydocstyle]
