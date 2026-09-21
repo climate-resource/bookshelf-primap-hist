@@ -1,10 +1,11 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: v0.3.0b1
-_src_path: https://github.com/climate-resource/copier-bookshelf-dataset.git
+_commit: v0.5.0
+_src_path: https://github.com/climate-resource/copier-bookshelf-dataset
 author: Jared Lewis
 author_email: jared.lewis@climate-resource.com
 dataset_description: National historical greenhouse gas emissions for every country
     and Kyoto gas from 1750.
 dataset_name: primap-hist
 dataset_name_human: PRIMAP-hist
+extra_recipes: []
 project_url: https://github.com/climate-resource/bookshelf-primap-hist

@@ -2,6 +2,7 @@ name: Feedstock CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
   push:
     branches:
       - main
@@ -11,7 +12,15 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  record:
-    uses: climate-resource/copier-bookshelf-dataset/.github/workflows/feedstock-ci.yaml@v0.3.0b1
+  bookshelf:
+    name: Bookshelf
+    uses: climate-resource/copier-bookshelf-dataset/.github/workflows/feedstock-ci.yaml@v0.5.0
+    with:
+      recipes: >-
+        bookshelf.yaml
+      main-ref: main
+      api-base-url: ${{ vars.BOOKSHELF_API_URL }}
+      sdk-version: "1.0.0b13"
