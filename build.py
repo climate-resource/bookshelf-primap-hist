@@ -126,16 +126,25 @@ data_regions = data.filter(region=regions).drop_meta("country")
 # %% [markdown]
 # # Publish
 
+
+# %%
+def as_wide(run: scmdata.ScmRun) -> pd.DataFrame:
+    """Return the run wide, naming the time axis the way the published books name it."""
+    wide = run.timeseries().sort_index()
+    wide.columns = [time.strftime("%Y-%m-%d") for time in wide.columns]
+    return wide.reset_index()
+
+
 # %%
 build.book.write(
     "by_country",
-    data_countries.timeseries().reset_index(),
+    as_wide(data_countries),
     type="timeseries",
     used=[raw],
 )
 build.book.write(
     "by_region",
-    data_regions.timeseries().reset_index(),
+    as_wide(data_regions),
     type="timeseries",
     used=[raw],
 )
