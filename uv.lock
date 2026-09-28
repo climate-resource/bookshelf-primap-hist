@@ -156,7 +156,7 @@ css = [
 
 [[package]]
 name = "bookshelf"
-version = "1.0.0b13"
+version = "1.0.0b14"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -167,9 +167,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/92/3f/b80b3c0d41c92be9d913a04d1fed9a8d814872721c93bc82409f5cc0c41f/bookshelf-1.0.0b13.tar.gz", hash = "sha256:d32bc510f1fe2b5df3ad8d7c80e87df23571dfea43d16b220853058a1bddd18d", size = 721600, upload-time = "2026-09-21T00:25:17.195Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f2/75/7840c7936dbe0f65708560c282f08ab650e0b26328287496e2e1c22e5aba/bookshelf-1.0.0b14.tar.gz", hash = "sha256:c767e54ff09216a54928067286b0cfd9daa0ffa8c9697bbd66c4e7bf97f67b7f", size = 723245, upload-time = "2026-09-23T01:39:33.817Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/02/88/cf6b71f984465a4617a8f0bcb467ec09e4bc151572dd186ee9cf6893ae25/bookshelf-1.0.0b13-py3-none-any.whl", hash = "sha256:5706b162c5c0adcae04f190b843772106cd65d9ecfe4c4041fb821df75bbe474", size = 210745, upload-time = "2026-09-21T00:25:15.75Z" },
+    { url = "https://files.pythonhosted.org/packages/69/cd/1776916f6f2cd2edc3d66054e022a3ec5c6796d3a76c33fc99d88ad4e78f/bookshelf-1.0.0b14-py3-none-any.whl", hash = "sha256:db221cd347b93cbab95a81e81e0a559ddbae914d5275af0b3bd3c4e28f5b8d44", size = 211954, upload-time = "2026-09-23T01:39:32.536Z" },
 ]
 
 [package.optional-dependencies]
@@ -201,7 +201,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bookshelf", extras = ["dataframes", "publish", "scmrun"], specifier = "==1.0.0b13" },
+    { name = "bookshelf", extras = ["dataframes", "publish", "scmrun"], specifier = "==1.0.0b14" },
     { name = "pandas", specifier = ">=2.2" },
     { name = "pycountry", specifier = ">=24.6.1" },
     { name = "scmdata", specifier = ">=0.16.1" },
