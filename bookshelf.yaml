@@ -329,6 +329,4 @@ books:
         affiliation: Climate Resource
     resources:
       raw:
-        license: CC-BY-NC-SA-4.0
-        license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
         uri: bookshelf://sha256/fd4108ad72c98454d18e7a97da2626869199bca489aab852dd37219cd3470e68
