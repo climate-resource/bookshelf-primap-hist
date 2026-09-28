@@ -313,3 +313,23 @@ books:
         doi: 10.5281/zenodo.17090760
         uri: https://zenodo.org/api/records/17090760/files/Guetschow_et_al_2025a-PRIMAP-hist_v2.7_final_no_rounding_22-Aug-2025.csv/content
         sha256: 77834f5f16197a463fe3df7e0eb3adda62a9e48355c9481926133986e35a9019
+  - version: "v2.8"
+    license: CC-BY-NC-SA-4.0
+    license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+    doi: 10.5281/zenodo.22876287
+    release_date: 2026-09-28
+    description: >-
+      Covers 1750 to 2025.
+    authors:
+      - name: Gütschow, Johannes
+        orcid: 0000-0001-9944-3685
+        affiliation: Freelance Climate Data Scientist
+      - name: Pflüger, Mika
+        orcid: 0000-0002-7814-8916
+        affiliation: Climate Resource
+    resources:
+      raw:
+        license: CC-BY-NC-SA-4.0
+        license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+        uri: bookshelf://sha256/fd4108ad72c98454d18e7a97da2626869199bca489aab852dd37219cd3470e68
+        sha256: fd4108ad72c98454d18e7a97da2626869199bca489aab852dd37219cd3470e68
