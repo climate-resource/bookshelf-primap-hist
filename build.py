@@ -5,11 +5,13 @@
 
 # %%
 import re
+from typing import cast
 
 import bookshelf
 import pandas as pd
 import pycountry
 import scmdata
+from bookshelf.publisher import ResolvedResource
 
 # %% [markdown]
 # # Fetch
@@ -19,7 +21,7 @@ import scmdata
 
 # %%
 build = bookshelf.setup()
-raw = build.use("raw")
+raw = cast(ResolvedResource, build.use("raw"))
 data_df = pd.read_csv(raw.path)
 data_df.head()
 
