@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.15' and sys_platform == 'win32'",
@@ -202,7 +202,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bookshelf", extras = ["publish", "scmrun"], specifier = "==1.0.0" },
+    { name = "bookshelf", extras = ["publish", "scmrun"], specifier = ">=1.0,<2" },
     { name = "pandas", specifier = ">=2.2" },
     { name = "pycountry", specifier = ">=24.6.1" },
     { name = "scmdata", specifier = ">=0.16.1" },
